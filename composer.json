@@ -9,11 +9,7 @@
     ],
     "license": "MIT",
     "require": {
-<<<<<<< HEAD
         "php": "^8.4",
-=======
-        "php": "^8.4", 
->>>>>>> 41ae7f559dbd447f9575283f9185c36635e13d8b
         "laravel/framework": "^13.17",
         "laravel/tinker": "^3.0"
     },
