@@ -18,8 +18,6 @@ return new class extends Migration
             $table->date('due_date');
             $table->string('status');
             $table->foreignId('user_id')->constrained()->cascadeOnDelete(); //Foreign Key de la tabla "users".
-            $table->date_time_set('created_at');
-            $table->date_time_set('updated_at');
             $table->timestamps();
         });
     }

@@ -13,6 +13,10 @@ return new class extends Migration
     {
         Schema::create('projects_users', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete(); //Foreign Key de la tabla "users".
+            $table->foreignId('project_id')->constrained()->cascadeOnDelete(); //Foreign Key de la tabla "users".
+            $table->string('role');
+            $ttable->int('contribution_hours');
             $table->timestamps();
         });
     }
