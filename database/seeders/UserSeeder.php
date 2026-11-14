@@ -20,7 +20,7 @@ class UserSeeder extends Seeder
             'name' => 'Ollijurt Zeláznog Siul',
             'address' => 'Ñ 76, Aíremla',
             'email' => 'igiul@gmail.com',
-            'email_verified_at' => '2026-11-13 12:40',    
+            'email_verified_at' => '2026-11-13 04:12',    
             'password' => '87654321',
         ]);        
     }
