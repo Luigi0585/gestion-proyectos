@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Project; //Se importa la clase Project. Útil para consultar, crear, editar o borrar registros de la tabla projects.
-//use Illuminate\Support\Facades\Auth; //Aunque este import es opcional, puede servir para saber qué usuario tiene su sesión iniciada, y de esa forma asignar su id al proyecto que ha creado.
+use Illuminate\Support\Facades\Auth; //Este import sirve para saber qué usuario tiene su sesión iniciada, y de esa forma asignar su id al proyecto que ha creado.
 
 
 class ProjectController extends Controller
@@ -13,10 +13,10 @@ class ProjectController extends Controller
      * Display a listing of the resource.
      */
     public function index() {
-        // Pedimos a la base de datos todos los proyectos
+        //Se pide a la base de datos todos los proyectos.
         $projects = Project::all();
 
-        // Devolvemos la vista 'projects/index.blade.php' pasándole la lista de proyectos
+        //Se devuelve la vista 'projects/index.blade.php' pasándole la lista de proyectos.
         return view('projects.index', compact('projects'));
     }
 
@@ -24,7 +24,7 @@ class ProjectController extends Controller
      * Show the form for creating a new resource.
      */
     public function create() {
-        // Solo devuelve el HTML del formulario vacío
+        //Solo devuelve el HTML del formulario vacío.
         return view('projects.create');
     }
 
@@ -55,7 +55,10 @@ class ProjectController extends Controller
      * Display the specified resource.
      */
     public function show(string $id) {
-        // Laravel busca automáticamente el proyecto por su ID en la URL
+        //Se encuentra el proyecto que se quiere ver.
+        $project = Project::find($id);
+
+        //Laravel busca automáticamente el proyecto por su ID en la URL.
         return view('projects.show', compact('project'));
     }
 
@@ -63,7 +66,10 @@ class ProjectController extends Controller
      * Show the form for editing the specified resource.
      */
     public function edit(string $id) {
-        // Enviamos el proyecto actual a la vista para rellenar el formulario
+        //Se encuentra el proyecto que se quiere editar.
+        $project = Project::find($id);
+
+        //Se envia el proyecto actual a la vista para rellenar el formulario.
         return view('projects.edit', compact('project'));
     }
 
@@ -71,7 +77,7 @@ class ProjectController extends Controller
      * Update the specified resource in storage.
      */
     public function update(Request $request, Project $project) {  //El string que se debe enviar al método según Copilot es $project. ¿Por qué?
-        // A. Validamos los nuevos datos
+        //Se validan los nuevos datos.
         $validated = $request->validate([
             'title'       => 'required|string|max:255',
             'description' => 'required|string',
@@ -79,10 +85,10 @@ class ProjectController extends Controller
             'status'      => 'required|string|max:50',
         ]);
 
-        // B. Actualizamos el proyecto en la base de datos
+        //Se actualiza el proyecto en la base de datos.
         $project->update($validated);
 
-        // C. Redirigimos al listado
+        //Se redirige al listado.
         return redirect()->route('projects.index')
                          ->with('success', 'Proyecto actualizado correctamente.');
     }
@@ -90,8 +96,8 @@ class ProjectController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Project $project) {  //Según Copilot, se debe pasar un objeto de tipo Proyect llamado $project. ¿Por qué?
-        // Borramos el registro de la base de datos
+    public function destroy(Project $project) {  
+        //Se borra el registro de la base de datos.
         $project->delete();
 
         // Redirigimos al listado
