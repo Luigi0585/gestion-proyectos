@@ -69,6 +69,11 @@ class ProjectController extends Controller
         //Se encuentra el proyecto que se quiere editar.
         $project = Project::find($id);
 
+        //Esta línea compara el usuario que creó el proyecto con el que tiene su sesión iniciada. Si no coinciden (es decir que 
+        // el que tiene sesión iniciada NO es su creador), salta un error 403 e impide que el usuario con la sesión iniciada
+        // pueda siquiera tocarlo. 
+        if ($project->user_id !== Auth::id()) { abort(403, 'No tienes permiso'); }
+
         //Se envia el proyecto actual a la vista para rellenar el formulario.
         return view('projects.edit', compact('project'));
     }
@@ -76,8 +81,11 @@ class ProjectController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Project $project) {  //El string que se debe enviar al método según Copilot es $project. ¿Por qué?
-        //Se validan los nuevos datos.
+    public function update(Request $request, Project $project) {  
+       //Aquí también se compara el usuario que creó el proyecto con el que tiene su sesión activa.
+       if ($project->user_id !== Auth::id()) { abort(403, 'No tienes permiso'); }
+
+       //Se validan los nuevos datos.
         $validated = $request->validate([
             'title'       => 'required|string|max:255',
             'description' => 'required|string',
@@ -97,6 +105,9 @@ class ProjectController extends Controller
      * Remove the specified resource from storage.
      */
     public function destroy(Project $project) {  
+        //Aquí también se compara el usuario que creó el proyecto con el que tiene su sesión activa.
+        if ($project->user_id !== Auth::id()) { abort(403, 'No tienes permiso'); }
+
         //Se borra el registro de la base de datos.
         $project->delete();
 
@@ -108,7 +119,7 @@ class ProjectController extends Controller
 
 /*NOTA: En update y destroy se pasa Project $project por 3 razones:
 -Para buscar el registro de un objeto Project, sin tener que crear la consulta SQL con SELECT a mano.
--Evita que se rompa el código si se intenta hacer operaciones sobre un registtro que simplemente no existe. En su lugar, hace que
+-Para evitar que se rompa el código si se intenta hacer operaciones sobre un registtro que simplemente no existe. En su lugar, hace que
 se muestre el error 404 ("no encontrado").
 -Para comprobar permisos y para ejecutar el update (comparando los datos viejos con los nuevos del formulario). 
 */
