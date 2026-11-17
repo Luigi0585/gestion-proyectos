@@ -10,6 +10,14 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
                     {{ __("You're logged in!") }}
+                    {{-- Contenedor de botones --}}
+                    <div class="flex space-x-4">
+                        
+                        {{-- Botón 1: Ir al listado --}}
+                        <a href="{{ route('projects.index') }}" 
+                           class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 transition">
+                            Ver Proyectos
+                        </a>
                 </div>
             </div>
         </div>
