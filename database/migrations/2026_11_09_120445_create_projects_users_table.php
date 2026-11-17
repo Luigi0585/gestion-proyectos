@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->cascadeOnDelete(); //Foreign Key de la tabla "users".
             $table->foreignId('project_id')->constrained()->cascadeOnDelete(); //Foreign Key de la tabla "users".
             $table->string('role');
-            $ttable->int('contribution_hours');
+            $table->integer('contribution_hours');
             $table->timestamps();
         });
     }
