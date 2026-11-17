@@ -45,12 +45,14 @@
                     </div>
                 </div>
 
-                {{-- Botones de acción rápida --}}
-                <div class="pt-4 border-t flex justify-end space-x-3">
-                    <a href="{{ route('projects.edit', $project) }}" style="background-color: #eab308; color: white;" class="font-bold py-2 px-4 rounded">
-                        Editar Proyecto
-                    </a>
-                </div>
+                {{-- Botones de acción rápida (Solo visibles para el propietario) --}}
+                @if ($project->user_id === Auth::id())
+                    <div class="pt-4 border-t flex justify-end space-x-3">
+                        <a href="{{ route('projects.edit', $project) }}" style="background-color: #eab308; color: white;" class="font-bold py-2 px-4 rounded">
+                            Editar Proyecto
+                        </a>
+                    </div>
+                @endif
 
             </div>
         </div>

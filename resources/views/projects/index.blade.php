@@ -51,17 +51,22 @@
                                         </span>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
+                                        {{-- Todos los usuarios pueden ver el detalle --}}
                                         <a href="{{ route('projects.show', $project) }}" class="text-indigo-600 hover:text-indigo-900">Ver</a>
-                                        <a href="{{ route('projects.edit', $project) }}" class="text-yellow-600 hover:text-yellow-900">Editar</a>
                                         
-                                        {{-- Formulario obligatorio para simular DELETE en HTML --}}
-                                        <form action="{{ route('projects.destroy', $project) }}" method="POST" class="inline">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="text-red-600 hover:text-red-900" onclick="return confirm('¿Seguro que quieres eliminar este proyecto?')">
-                                                Borrar
-                                            </button>
-                                        </form>
+                                        {{-- Solo el propietario del proyecto ve Editar y Borrar --}}
+                                        @if ($project->user_id === Auth::id())
+                                            <a href="{{ route('projects.edit', $project) }}" class="text-yellow-600 hover:text-yellow-900">Editar</a>
+                                            
+                                            {{-- Formulario obligatorio para simular DELETE en HTML --}}
+                                            <form action="{{ route('projects.destroy', $project) }}" method="POST" class="inline">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="text-red-600 hover:text-red-900" onclick="return confirm('¿Seguro que quieres eliminar este proyecto?')">
+                                                    Borrar
+                                                </button>
+                                            </form>
+                                        @endif
                                     </td>
                                 </tr>
                             @endforeach
