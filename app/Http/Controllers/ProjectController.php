@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Project; //Se importa la clase Project. Útil para consultar, crear, editar o borrar registros de la tabla projects.
 use Illuminate\Support\Facades\Auth; //Este import sirve para saber qué usuario tiene su sesión iniciada, y de esa forma asignar su id al proyecto que ha creado.
-
+use App\Models\User; //Hace que no se deba escribir \App\Models\User dentro del método show.
 
 class ProjectController extends Controller
 {
@@ -54,21 +54,18 @@ class ProjectController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id) {
-        //Se encuentra el proyecto que se quiere ver.
-        $project = Project::find($id);
+    public function show(Project $project) {
+        //Se cargan todos los usuarios para mostrarlos en el desplegable de asignación.
+        $users = \App\Models\User::all();
 
-        //Laravel busca automáticamente el proyecto por su ID en la URL.
-        return view('projects.show', compact('project'));
-    }
+        //Se envía tanto el proyecto como los usuarios a la vista.
+    return view('projects.show', compact('project', 'users'));
+}
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id) {
-        //Se encuentra el proyecto que se quiere editar.
-        $project = Project::find($id);
-
+    public function edit(Project $project) {
         //Esta línea compara el usuario que creó el proyecto con el que tiene su sesión iniciada. Si no coinciden (es decir que 
         // el que tiene sesión iniciada NO es su creador), salta un error 403 e impide que el usuario con la sesión iniciada
         // pueda siquiera tocarlo. 
@@ -117,9 +114,8 @@ class ProjectController extends Controller
     }
 }
 
-/*NOTA: En update y destroy se pasa Project $project por 3 razones:
--Para buscar el registro de un objeto Project, sin tener que crear la consulta SQL con SELECT a mano.
--Para evitar que se rompa el código si se intenta hacer operaciones sobre un registtro que simplemente no existe. En su lugar, hace que
-se muestre el error 404 ("no encontrado").
--Para comprobar permisos y para ejecutar el update (comparando los datos viejos con los nuevos del formulario). 
-*/
+//NOTA: En update y destroy se pasa Project $project por 3 razones:
+//-Para buscar el registro de un objeto Project, sin tener que crear la consulta SQL con SELECT a mano.
+//-Para evitar que se rompa el código si se intenta hacer operaciones sobre un registtro que simplemente no existe. En su lugar, hace que
+//se muestre el error 404 ("no encontrado").
+//-Para comprobar permisos y para ejecutar el update (comparando los datos viejos con los nuevos del formulario). 

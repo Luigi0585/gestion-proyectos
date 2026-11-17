@@ -29,4 +29,19 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    //Relación 1:N: Los proyectos creados por este usuario.
+    //Establece la relación entre la tabla project y project_users.
+    public function createdProjects()
+    {
+        return $this->hasMany(Project::class, 'user_id');
+    }
+
+    //Relación N:N: Los proyectos en los que este usuario participa.
+    public function collaborations()
+    {
+        return $this->belongsToMany(Project::class, 'project_users') //También se pasa project_users como parámetro por la misma razón que en Project.php.
+                    ->withPivot('role', 'contribution_hours')
+                    ->withTimestamps();
+    }
 }
