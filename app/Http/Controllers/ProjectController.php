@@ -112,6 +112,51 @@ class ProjectController extends Controller
         return redirect()->route('projects.index')
                          ->with('success', 'Proyecto eliminado.');
     }
+
+    /**
+     * Asignar un usuario colaborador o actualizar su rol/horas en el proyecto (N:N)
+     */
+    public function addContributor(Request $request, Project $project) {
+        //Autorización: Solo el propietario puede añadir o editar colaboradores.
+        if ($project->user_id !== Auth::id()) {
+            abort(403, 'No tienes permiso para gestionar los participantes de este proyecto.');
+        }
+
+        //Se validan los datos del formulario.
+        $validated = $request->validate([
+            'user_id'            => 'required|exists:users,id',
+            'role'               => 'required|string|max:100',
+            'contribution_hours' => 'required|integer|min:0',
+        ]);
+
+        //Se guarda el colaborador en la tabla 'project_users' con datos extra.
+        // syncWithoutDetaching() añade al usuario si no estaba, o actualiza su rol y horas si ya participaba
+        $project->contributors()->syncWithoutDetaching([
+            $validated['user_id'] => [
+                'role'               => $validated['role'],
+                'contribution_hours' => $validated['contribution_hours'],
+            ]
+        ]);
+
+        return redirect()->route('projects.show', $project)
+        ->with('success', 'Participante asignado/actualizado correctamente.');
+    }
+
+    /**
+     * Eliminar un colaborador del proyecto
+     */
+    public function removeContributor(Project $project, User $user) {
+        //Autorización: Solo el propietario puede quitar colaboradores.
+        if ($project->user_id !== Auth::id()) {
+            abort(403, 'No tienes permiso para quitar participantes.');
+        }
+
+        //Se rompe el vínculo en la tabla pivote usando detach().
+        $project->contributors()->detach($user->id);
+
+        return redirect()->route('projects.show', $project)
+        ->with('success', 'Participante eliminado del proyecto.');
+    }
 }
 
 //NOTA: En update y destroy se pasa Project $project por 3 razones:
